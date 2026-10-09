@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora de Salário Líquido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            margin: 2rem auto;
+            max-width: 36rem;
+            padding: 0 1rem;
+        }
+        label, input {
+            display: block;
+        }
+        input {
+            box-sizing: border-box;
+            margin: 0.25rem 0 1rem;
+            padding: 0.5rem;
+            width: 100%;
+        }
+        button {
+            padding: 0.5rem 1rem;
+        }
+        .erro {
+            background: #ffe5e5;
+            color: #a40000;
+            padding: 0.75rem;
+        }
+        .resultado {
+            background: #e8f5e9;
+            margin-top: 1.5rem;
+            padding: 1rem;
+        }
+        .resultado p {
+            margin: 0.35rem 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Salário Líquido</h1>
+
+    {% if erro %}
+        <p class="erro">{{ erro }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('resultado') }}" method="post">
+        <label for="salario">Salário bruto (R$)</label>
+        <input id="salario" type="text" name="salario" inputmode="decimal"
+               placeholder="Ex.: 3000,00" required>
+
+        <label for="dependentes">Número de dependentes</label>
+        <input id="dependentes" type="number" name="dependentes" min="0"
+               step="1" required>
+
+        <button type="submit">Calcular</button>
+    </form>
+
+    {% if salario_liquido is defined %}
+        <section class="resultado">
+            <h2>Resultado</h2>
+            <p>Salário bruto: R$ {{ "%.2f"|format(salario) }}</p>
+            <p>INSS (8%): R$ {{ "%.2f"|format(inss) }}</p>
+            <p>IR (15%): R$ {{ "%.2f"|format(imposto_renda) }}</p>
+            <p>Desconto por dependentes: R$ {{ "%.2f"|format(desconto_dependentes) }}</p>
+            <p><strong>Salário líquido: R$ {{ "%.2f"|format(salario_liquido) }}</strong></p>
+        </section>
+    {% endif %}
+</body>
+</html>
